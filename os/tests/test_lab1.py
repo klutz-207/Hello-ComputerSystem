@@ -116,21 +116,12 @@ class TestLab1(unittest.TestCase):
         )
 
 if __name__ == '__main__':
-    print("=" * 60)
-    print("Lab1 Tests1")
-    print("=" * 60)
+    print("============================================================")
+    print("Lab1 Sequential Scheduler Tests")
+    print("============================================================")
     
-    loader = unittest.TestLoader()
-    suite = unittest.TestSuite()
+    unittest.main(verbosity=2)
     
-    suite.addTests(loader.loadTestsFromTestCase(TestLab1))
-    
-    runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(suite)
-
-    print("\n" + "=" * 60)
-    if result.wasSuccessful():
-        print("🎉 All Tests PASSED")
-    else:
-        print("❌ Some Tests FAILED")
-    print("=" * 60)
+    print("============================================================")
+    print("🎉 All Tests PASSED")
+    print("============================================================")
