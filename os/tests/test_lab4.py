@@ -18,7 +18,7 @@ class TestLab4(unittest.TestCase):
         myos.init(lambda procs: procs[0], procs)
         f = StringIO()
         with redirect_stdout(f):
-            my_run([proc.__copy__() for proc in procs])
+            my_run()
         return f.getvalue().rstrip('\n')  # Remove trailing newlines
     
     def reference_output(self, procs: List[Process]) -> str:
