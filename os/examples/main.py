@@ -12,8 +12,6 @@ def random_scheduler(procs):
     """A random scheduler that selects a process randomly"""
     return random.choice(procs)
 
-putchar = lambda c: print(c, end='')
-
 def run():
     """
     Main running loop for the Operating System.
@@ -31,7 +29,7 @@ def run():
             process_exit(current)
         elif call.syscall == SyscallType.SYS_WRITE:
             # Write the character from syscall arg to the console
-            putchar(call.arg)
+            print(call.arg, end='', flush=True)
     
     print()  # Print newline at the end
 
