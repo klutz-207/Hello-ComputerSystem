@@ -91,6 +91,9 @@ def main():
             print(f"🧪 Running Tests for {lab_name}")
             print("=" * 50)
             success = run_specific_lab_test(lab_name)
+            if success:
+                print("\n" + "=" * 50)
+                print(f"🎉 All Tests for {lab_name} PASSED!")
     else:
         output_help()
         sys.exit(1)

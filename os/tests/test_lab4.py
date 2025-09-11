@@ -3,6 +3,7 @@ import sys
 import os
 from typing import List
 from io import StringIO
+from copy import deepcopy
 from contextlib import redirect_stdout
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -12,20 +13,25 @@ from src.process import Process, Syscall, SyscallType
 from labs.lab4 import my_run
 
 class TestLab4(unittest.TestCase):
-    
     def capture_output(self, procs: List[Process]) -> str:
         """Capture the output from my_run function"""
-        myos.init(lambda procs: procs[0], procs)
+        def scheduler(procs):
+            proc = procs.pop(0)
+            procs.append(proc)
+            return proc
+        myos.init(scheduler, procs)
+        
         f = StringIO()
         with redirect_stdout(f):
             my_run()
+        
         return f.getvalue().rstrip('\n')  # Remove trailing newlines
     
     def reference_output(self, procs: List[Process]) -> str:
         """Reference implementation for expected output with FORK support"""
         output = []
         # Create a copy of processes to avoid modifying the original list
-        proc_list = [proc.__copy__() for proc in procs]
+        proc_list = procs
         
         while proc_list:
             # Simple sequential execution for reference
@@ -80,27 +86,27 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         # After fork, we should have: A (from original), then B B (from both original and forked process)
         self.assertEqual(result, "ABB")
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
 
-    def test_fork_without_remaining_syscalls(self):
-        """Test FORK when it's the last syscall"""
+    def test_fork_double(self):
+        """Test FORK double"""
         procs = [
             Process([
                 Syscall(SyscallType.SYS_WRITE, "X"),
-                Syscall(SyscallType.SYS_FORK)
+                Syscall(SyscallType.SYS_FORK),
+                Syscall(SyscallType.SYS_WRITE, "Y"),
+                Syscall(SyscallType.SYS_EXIT)
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
-        # Only X should be output, then fork happens but no more syscalls
-        self.assertEqual(result, "X")
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
 
     def test_multiple_forks(self):
@@ -116,7 +122,7 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
@@ -132,7 +138,7 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         # Expected: A (original), then BBBB (two processes each doing WRITE_DOUBLE)
@@ -154,7 +160,7 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
@@ -170,7 +176,7 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, "ABBC")
@@ -187,7 +193,7 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         # After 2 forks, we should have 4 processes total, each writing "X"
@@ -198,7 +204,7 @@ class TestLab4(unittest.TestCase):
         """Test with empty process list"""
         procs = []
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, "")
@@ -217,7 +223,7 @@ class TestLab4(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")

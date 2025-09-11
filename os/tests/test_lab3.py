@@ -3,6 +3,7 @@ import sys
 import os
 from typing import List
 from io import StringIO
+from copy import deepcopy
 from contextlib import redirect_stdout
 
 # 添加项目根目录到Python路径
@@ -67,7 +68,7 @@ class TestLab3(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
@@ -81,7 +82,7 @@ class TestLab3(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         # WRITE_DOUBLE should output twice
@@ -99,7 +100,7 @@ class TestLab3(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         # Expected: A, B, B, C
@@ -124,7 +125,7 @@ class TestLab3(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
@@ -140,7 +141,7 @@ class TestLab3(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         # Expected: X, X, Y, Y, Z, Z
@@ -151,7 +152,7 @@ class TestLab3(unittest.TestCase):
         """Test with empty process list"""
         procs = []
         
-        result = self.capture_output(procs)
+        result = self.capture_output(procs.copy())
         expected = self.reference_output(procs)
         
         self.assertEqual(result, "")  # Empty string
@@ -191,7 +192,7 @@ class TestLab3(unittest.TestCase):
             ])
         ]
         
-        result = self.capture_output(procs)
+        result = self.capture_output(deepcopy(procs))
         expected = self.reference_output(procs)
         
         self.assertEqual(result, expected, f"Expected '{expected}', got '{result}'")
