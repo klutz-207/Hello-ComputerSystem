@@ -19,33 +19,21 @@ os/
 ├── examples/          # 示例代码
 │   ├── main.py       # 主程序入口，演示OS功能
 │   └── __init__.py   # Python包初始化
-├── run.py            # 快速启动脚本
+├── run_tests.py      # 测试脚本
 └── README.md         # 项目说明文档
 ```
 
-## 快速开始
-
-### 运行测试
-```bash
-python3 run.py test     # 运行所有测试
-python3 run.py lab1     # 只运行lab1测试
-```
+## 代码说明
 
 ### 运行示例
-```bash
-python3 run.py demo     # 运行随机调度器示例
-```
 
-### 手动运行
-```bash
-# 运行测试
-cd tests && python3 test_lab1.py
 
+```bash
 # 运行示例
-cd examples && python3 main.py
+python3 examples/main.py
 ```
 
-## 代码说明
+**如果你使用Windows，且python3运行无反应，可以尝试用python代替python3**
 
 ### process.py - 进程和系统调用定义
 
@@ -167,7 +155,15 @@ AABCACBACACCBBB
 
 ## 实验内容
 
-我们编写了自动测试脚本（见开头）。如果题目有难度，你也可以提交思路文档。
+我们编写了自动测试脚本。如果题目有难度，你也可以提交思路文档。
+
+```bash
+# 查看如何运行测试
+python3 run_tests.py help
+
+# 运行所有测试
+python3 run_tests.py all
+```
 
 ### LAB1 顺序调度器
 
